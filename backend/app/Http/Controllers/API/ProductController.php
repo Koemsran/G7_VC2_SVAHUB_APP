@@ -17,7 +17,7 @@ class ProductController extends Controller
    //=================Get all products=================//
     public function index()
     {
-        $products = Product::with(['category', 'colors', 'sizes', 'discounts'])->latest()->get();
+        $products = Product::with(['category', 'colors', 'sizes', 'discounts'])->get();
         // Filter products with discounts
         $productsWithDiscounts = $products->filter(function ($product) {
             return $product->discounts->isNotEmpty();

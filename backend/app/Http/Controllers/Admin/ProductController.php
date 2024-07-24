@@ -34,7 +34,7 @@ class ProductController extends Controller
             }
         }
 
-        $products = $productsQuery->get();
+        $products = $productsQuery->latest()->get();
 
         return view('setting.products.index', compact('products', 'categories'));
     }

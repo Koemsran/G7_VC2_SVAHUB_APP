@@ -27,10 +27,15 @@
             size="large"
             class="mt-3 w-full"
             :disabled="isSubmitting"
+            :loading="isLoading"
             type="primary"
             native-type="submit"
-            >Submit</el-button
           >
+            <template v-if="!isLoading">Submit</template>
+            <template v-else>
+              <i class="fa fa-spinner fa-spin"></i>
+            </template>
+          </el-button>
         </div>
 
         <p class="text-sm font-light text-gray-500 dark:text-gray-400 mt-2">
@@ -56,6 +61,7 @@ import { ref } from 'vue'
 const router = useRouter()
 const emailError = ref('')
 const passwordError = ref('')
+const isLoading = ref(false)
 const formSchema = yup.object({
   password: yup.string().required().label('Password'),
   email: yup.string().required().email().label('Email address')
@@ -71,6 +77,7 @@ const { handleSubmit, isSubmitting } = useForm({
 
 const onSubmit = handleSubmit(async (values) => {
   try {
+    isLoading.value = true
     const { data } = await axiosInstance.post('/login', values)
     localStorage.setItem('access_token', data.access_token)
     router.push('/')
@@ -86,6 +93,8 @@ const onSubmit = handleSubmit(async (values) => {
     } else {
       console.warn('Error:', error)
     }
+  } finally {
+    isLoading.value = false
   }
 })
 
